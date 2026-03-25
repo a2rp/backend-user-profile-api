@@ -1,0 +1,55 @@
+### home
+GET http://localhost:1201
+
+### register
+POST http://localhost:1201/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "user1",
+  "email": "user1@mail.com",
+  "password": "123456"
+}
+
+### login
+POST http://localhost:1201/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user1@mail.com",
+  "password": "1234567"
+}
+
+### logout
+POST http://localhost:1201/api/auth/logout
+
+### get profile
+GET http://localhost:1201/api/profile
+
+### update profile
+PUT http://localhost:1201/api/profile/update
+Content-Type: application/json
+
+{
+  "name": "user 11",
+  "bio": "Full stack MERN developer",
+  "phone": "9876543210"
+}
+
+### change password
+PUT http://localhost:1201/api/profile/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "123456",
+  "newPassword": "1234567"
+}
+
+### update settings
+PUT http://localhost:1201/api/profile/settings
+Content-Type: application/json
+
+{
+  "bio": "Backend and MERN developer",
+  "phone": "9999999999"
+}

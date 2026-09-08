@@ -1,38 +1,34 @@
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const authRoutes = require("./routes/auth.routes");
-const profileRoutes = require("./routes/profile.routes");
 
 dotenv.config();
 
-connectDB();
+const app = require("./app");
 
-const app = express();
-
-app.use(express.json());
-app.use(cookieParser());
-
-app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true,
-    }),
+const requiredEnvironmentVariables = ["MONGO_URI", "JWT_SECRET"];
+const missingEnvironmentVariables = requiredEnvironmentVariables.filter(
+    (name) => !process.env[name],
 );
 
-app.get("/", (req, res) => {
-    res.json({
-        message: "User Profile API is running",
-    });
-});
+if (missingEnvironmentVariables.length > 0) {
+    console.error(
+        `Server startup failed: Missing required environment variables: ${missingEnvironmentVariables.join(", ")}`,
+    );
+    process.exitCode = 1;
+} else {
+    const PORT = Number(process.env.PORT) || 1198;
 
-app.use("/api/auth", authRoutes);
-app.use("/api/profile", profileRoutes);
+    const startServer = async () => {
+        try {
+            await connectDB();
+            app.listen(PORT, () => {
+                console.log(`[API] Server running on port ${PORT}`);
+            });
+        } catch (error) {
+            console.error("Server startup failed:", error.message);
+            process.exitCode = 1;
+        }
+    };
 
-const PORT = process.env.PORT || 1201;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+    startServer();
+}

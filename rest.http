@@ -1,55 +1,60 @@
-### home
-GET http://localhost:1201
+@baseUrl = http://localhost:1198
 
-### register
-POST http://localhost:1201/api/auth/register
+### Home
+GET {{baseUrl}}/
+
+### Health
+GET {{baseUrl}}/health
+
+### Register
+POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "user1",
-  "email": "user1@mail.com",
-  "password": "123456"
+  "name": "Ashish",
+  "email": "ashish@example.com",
+  "password": "password123"
 }
 
-### login
-POST http://localhost:1201/api/auth/login
+### Login
+POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "user1@mail.com",
-  "password": "1234567"
+  "email": "ashish@example.com",
+  "password": "password123"
 }
 
-### logout
-POST http://localhost:1201/api/auth/logout
+### Get profile
+GET {{baseUrl}}/api/profile
 
-### get profile
-GET http://localhost:1201/api/profile
-
-### update profile
-PUT http://localhost:1201/api/profile/update
+### Update profile
+PUT {{baseUrl}}/api/profile/update
 Content-Type: application/json
 
 {
-  "name": "user 11",
-  "bio": "Full stack MERN developer",
-  "phone": "9876543210"
+  "name": "Ashish Ranjan",
+  "bio": "Full-Stack Web Developer",
+  "phone": "+91 9876543210"
 }
 
-### change password
-PUT http://localhost:1201/api/profile/change-password
+### Change password
+PUT {{baseUrl}}/api/profile/change-password
 Content-Type: application/json
 
 {
-  "currentPassword": "123456",
-  "newPassword": "1234567"
+  "currentPassword": "password123",
+  "newPassword": "new-password123"
 }
 
-### update settings
-PUT http://localhost:1201/api/profile/settings
+### Update settings
+PUT {{baseUrl}}/api/profile/settings
 Content-Type: application/json
 
 {
-  "bio": "Backend and MERN developer",
-  "phone": "9999999999"
+  "bio": "Backend and web development",
+  "phone": "+91 9876543210"
 }
+
+### Logout
+POST {{baseUrl}}/api/auth/logout

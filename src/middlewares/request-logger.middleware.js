@@ -1,6 +1,6 @@
 const requestLogger = (req, res, next) => {
     res.on("finish", () => {
-        console.log(`[API] ${req.method} ${req.originalUrl} -> ${res.statusCode}`);
+        console.log(`[API] ${req.method} ${req.path} -> ${res.statusCode}`);
     });
 
     next();

@@ -29,24 +29,23 @@ A secure REST API for account registration, authentication, profile management, 
 
 ## Requirements
 
-- Node.js 18 or newer
+- Node.js 20.19 or newer
 - MongoDB running locally or a reachable MongoDB deployment
 
 ## Configuration
 
-Copy `.env.example` to `.env`, then replace the JWT placeholder with a private random value.
+Copy `.env.example` to `.env`, then replace the JWT placeholder with a unique random value of at least 32 characters.
 
 ```env
 PORT=1198
 MONGO_URI=mongodb://127.0.0.1:27017/backend_user_profile_api
-JWT_SECRET=replace_with_a_long_random_secret
+JWT_SECRET=change_me_generate_a_unique_random_secret_of_at_least_32_chars
 NODE_ENV=development
-CLIENT_ORIGIN=http://localhost:5173
-COOKIE_SECURE=false
+CLIENT_ORIGINS=http://localhost:5173
 COOKIE_SAME_SITE=lax
 ```
 
-Never commit `.env` or real credentials.
+In production, provide trusted frontend origins as a comma-separated `CLIENT_ORIGINS` list. Cookies are always Secure in production; `COOKIE_SAME_SITE=none` is allowed only there. Never commit `.env` or real credentials.
 
 ## Install and run
 
@@ -55,7 +54,7 @@ npm install
 npm run dev
 ```
 
-The default API address is `http://localhost:1198`. The server will not start until `MONGO_URI` and `JWT_SECRET` are configured.
+The default API address is `http://localhost:1198`. The server validates `MONGO_URI`, `JWT_SECRET`, production origins, cookie settings, and the port before starting.
 
 ## API endpoints
 
@@ -99,6 +98,8 @@ Every JSON response starts with the requested API path.
 
 Public error responses do not expose database, authentication, or internal server details.
 
+Passwords must contain at least 8 characters and no more than 72 UTF-8 bytes. Changing a password increments the user's token version, invalidating existing cookies before a fresh cookie is issued. Logout also invalidates active cookies for the account. Rate limits are stored in memory per process; multi-instance deployments need a shared store.
+
 ## Browser request example
 
 ```js
@@ -134,19 +135,3 @@ Full-Stack Web Developer
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](./LICENSE).
-
-## Links
-
-- Portfolio: [https://www.ashishranjan.net](https://www.ashishranjan.net)
-- GitHub: [https://github.com/a2rp](https://github.com/a2rp)
-- CodePen: [https://codepen.io/ash1198](https://codepen.io/ash1198)
-- LinkedIn: [https://www.linkedin.com/in/aashishranjan](https://www.linkedin.com/in/aashishranjan)
-- Facebook: [https://www.facebook.com/theash.ashish/](https://www.facebook.com/theash.ashish/)
-- YouTube: [https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1](https://www.youtube.com/@ashishranjan-ashz?sub_confirmation=1)
-- Email: [ash.ranjan09@gmail.com](mailto:ash.ranjan09@gmail.com)
-
-## Support
-
-- Support: [https://a2rp-donation-page.netlify.app/](https://a2rp-donation-page.netlify.app/)
-- Buy Me A Coffee: [https://buymeacoffee.com/a2rp](https://buymeacoffee.com/a2rp)
-- Patreon: [https://patreon.com/a2rp](https://patreon.com/a2rp)

@@ -13,7 +13,7 @@ Content-Type: application/json
 {
   "name": "Ashish",
   "email": "ashish@example.com",
-  "password": "password123"
+  "password": "ReplaceThisWithYourOwnPassphrase2026!"
 }
 
 ### Login
@@ -22,7 +22,7 @@ Content-Type: application/json
 
 {
   "email": "ashish@example.com",
-  "password": "password123"
+  "password": "ReplaceThisWithYourOwnPassphrase2026!"
 }
 
 ### Get profile
@@ -43,8 +43,8 @@ PUT {{baseUrl}}/api/profile/change-password
 Content-Type: application/json
 
 {
-  "currentPassword": "password123",
-  "newPassword": "new-password123"
+  "currentPassword": "ReplaceThisWithYourOwnPassphrase2026!",
+  "newPassword": "AnotherPrivatePassphrase2026!"
 }
 
 ### Update settings

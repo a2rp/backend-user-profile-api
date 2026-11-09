@@ -1,7 +1,7 @@
 {
     "name": "backend-user-profile-api",
     "version": "1.0.0",
-    "description": "Secure backend API for authenticated user profile and account management",
+    "description": "Express and MongoDB API for secure user profile management and password changes with JWT HttpOnly cookies",
     "main": "src/index.js",
     "scripts": {
         "dev": "nodemon src/index.js",
@@ -10,13 +10,25 @@
     "keywords": [
         "backend",
         "express",
+        "express-5",
         "mongodb",
+        "mongoose",
         "authentication",
-        "user-profile"
+        "user-profile",
+        "profile-api",
+        "jwt",
+        "http-only-cookie",
+        "bcryptjs",
+        "password-change",
+        "rest-api",
+        "api-security"
     ],
     "author": "Ashish Ranjan",
     "license": "MIT",
     "type": "commonjs",
+    "engines": {
+        "node": ">=20.19.0"
+    },
     "dependencies": {
         "bcryptjs": "^3.0.3",
         "cookie-parser": "^1.4.7",

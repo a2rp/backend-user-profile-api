@@ -3,9 +3,10 @@ const generateToken = require("../utils/token");
 const publicUser = require("../utils/publicUser");
 const { getAuthCookieOptions } = require("../utils/cookieOptions");
 
-const isValidPhone = (phone) => /^[0-9+()\-\s]{7,20}$/.test(phone);
+const isValidPhone = (phone) => /^(?=.*\d)[0-9+()\-\s]{7,20}$/.test(phone);
 
 const getProfileUpdates = (body, allowName) => {
+    if (!body || typeof body !== "object" || Array.isArray(body)) return { error: "A JSON object is required" };
     const allowedFields = allowName ? ["name", "bio", "phone"] : ["bio", "phone"];
     const suppliedFields = allowedFields.filter(
         (field) => body[field] !== undefined,
@@ -18,8 +19,8 @@ const getProfileUpdates = (body, allowName) => {
     const updates = {};
 
     if (allowName && body.name !== undefined) {
-        if (typeof body.name !== "string" || !body.name.trim()) {
-            return { error: "Name cannot be empty" };
+        if (typeof body.name !== "string" || body.name.trim().length < 2 || body.name.trim().length > 100) {
+            return { error: "Name must contain 2 to 100 characters" };
         }
 
         updates.name = body.name.trim();
@@ -56,7 +57,7 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     try {
-        const { updates, error } = getProfileUpdates(req.body, true);
+        const { updates, error } = getProfileUpdates(req.body || {}, true);
 
         if (error) {
             return res.status(400).json({ message: error });
@@ -86,7 +87,7 @@ const updateProfile = async (req, res) => {
 
 const changePassword = async (req, res) => {
     try {
-        const { currentPassword, newPassword } = req.body;
+        const { currentPassword, newPassword } = req.body || {};
 
         if (
             typeof currentPassword !== "string" ||
@@ -99,10 +100,8 @@ const changePassword = async (req, res) => {
             });
         }
 
-        if (newPassword.length < 6) {
-            return res
-                .status(400)
-                .json({ message: "New password must be at least 6 characters" });
+        if ([...newPassword].length < 8 || Buffer.byteLength(newPassword, "utf8") > 72) {
+            return res.status(422).json({ message: "New password must contain at least 8 characters and no more than 72 UTF-8 bytes" });
         }
 
         if (currentPassword === newPassword) {
@@ -111,7 +110,7 @@ const changePassword = async (req, res) => {
             });
         }
 
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id).select("+password +tokenVersion");
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -119,26 +118,28 @@ const changePassword = async (req, res) => {
 
         if (!(await user.comparePassword(currentPassword))) {
             return res
-                .status(400)
+                .status(401)
                 .json({ message: "Current password is incorrect" });
         }
 
         user.password = newPassword;
+        user.tokenVersion += 1;
         await user.save();
 
-        res.cookie("token", generateToken(user._id), getAuthCookieOptions());
+        res.cookie("token", generateToken(user._id, user.tokenVersion), getAuthCookieOptions());
 
         return res.status(200).json({
             message: "Password changed successfully",
         });
     } catch (error) {
+        console.error("Password change failed:", error);
         return res.status(500).json({ message: "Failed to change password" });
     }
 };
 
 const updateSettings = async (req, res) => {
     try {
-        const { updates, error } = getProfileUpdates(req.body, false);
+        const { updates, error } = getProfileUpdates(req.body || {}, false);
 
         if (error) {
             return res.status(400).json({ message: error });

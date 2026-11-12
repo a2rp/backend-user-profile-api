@@ -45,7 +45,7 @@ CLIENT_ORIGINS=http://localhost:5173
 COOKIE_SAME_SITE=lax
 ```
 
-In production, provide trusted frontend origins as a comma-separated `CLIENT_ORIGINS` list. Cookies are always Secure in production; `COOKIE_SAME_SITE=none` is allowed only there. Never commit `.env` or real credentials.
+In production, provide trusted frontend origins as a comma-separated `CLIENT_ORIGINS` list. If the frontend and API are hosted on different sites, set `COOKIE_SAME_SITE=none`; serve the API over HTTPS because cross-site cookies require `Secure`. Cookies are always Secure in production. Never commit `.env` or real credentials.
 
 ## Install and run
 
